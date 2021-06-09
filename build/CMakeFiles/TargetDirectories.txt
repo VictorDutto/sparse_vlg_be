@@ -1,3 +1,0 @@
-/home/surenis/dev/sparse_vlg/build/CMakeFiles/rebuild_cache.dir
-/home/surenis/dev/sparse_vlg/build/CMakeFiles/edit_cache.dir
-/home/surenis/dev/sparse_vlg/build/CMakeFiles/sparse_vlg.dir
