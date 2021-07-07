@@ -6,5 +6,5 @@ project(sparse_vlg)
 find_package(igraph REQUIRED)
 #find_package(Boost REQUIRED COMPONENTS system program_options)
 
-add_executable(sparse_vlg main.cpp)
+add_executable(sparse_vlg main.cpp utils.cpp)
 target_link_libraries(sparse_vlg PUBLIC igraph::igraph)
