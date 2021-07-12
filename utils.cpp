@@ -27,12 +27,30 @@ igraph_t *init_gcc(igraph_t *graph)
     return lcc_graph;
 }
 
-long int starting_ite_point(std::vector<int> got_ecc)
+//Defines strategy
+//density strategy
+//in cases where vertices are linked according to index
+//we choose a starting point according to the average position observed
+//until call with opt to avoid less relevant cases
+long int starting_ite_point(std::vector<int> got_ecc, size_t avg_pos,
+    int revertable = 1)
 {
-    int res = 0;
-    while (got_ecc[res] != 0)
+    printf("calling starting ite point with %ld, %i\n", avg_pos, revertable);
+    long int res = 0;
+    if (avg_pos == 0)
     {
+        return 0;
+    }
+    size_t n = got_ecc.size();
+    if (avg_pos * 4 < n || n - avg_pos < n / 4 || revertable)
+    {
+        res = n - avg_pos;
+    }
+    while (got_ecc[res] == 1)
         res++;
+    if (res == n)
+    {
+        starting_ite_point(got_ecc, avg_pos, 0);
     }
     return res;
 }
@@ -49,13 +67,15 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
    std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
    std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
 
+   size_t pos_sum = 0;
    for (size_t cmp_ecc = 0; cmp_ecc < nb_vertices;)
    {
        //launch eccentricity computation routine
        igraph_matrix_t res;
        igraph_matrix_init(&res, 0, 0);
-       //basic shortest_path
-       long int index = starting_ite_point(got_eccentricity);
+       //new starting point, depends on strategy
+       size_t avg_pos = cmp_ecc == 0 ? 0 : pos_sum / cmp_ecc;
+       long int index = starting_ite_point(got_eccentricity, avg_pos);
        igraph_shortest_paths(g_c_component, &res, igraph_vss_1(index), igraph_vss_all(), IGRAPH_ALL);
        //searching for the greatest value in the row_index row
        igraph_vector_t row_vect;
@@ -73,6 +93,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
                ecc_vect[w] = lower_bound[w];
                got_eccentricity[w] = 1;
                cmp_ecc += 1;
+               pos_sum += w; 
            }
        }
     }
