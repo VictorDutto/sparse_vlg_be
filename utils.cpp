@@ -27,15 +27,13 @@ igraph_t *init_gcc(igraph_t *graph)
     return lcc_graph;
 }
 
-
 std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
 {
    size_t nb_vertices = igraph_vcount(g_c_component);
    
    // Generates the vector of graph indexes
    // then fill it
-   std::vector<unsigned int> index_vect(nb_vertices);
-   std::iota(index_vect.begin(), index_vect.end(), 0);
+   std::vector<int> index_vect(nb_vertices, 0);
    //filled index referes to the vertice
    std::vector<int> ecc_vect(nb_vertices, 0);
    std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
@@ -53,10 +51,19 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
    igraph_vector_init(&row_vect, nb_vertices);
    igraph_matrix_get_row(&res, &row_vect, index);
    ecc_vect[index] =  igraph_vector_max(&row_vect);
-   printf("%u\n", ecc_vect[index]);
-   // select vertice
-   // compute eccentricity
-   //propagate information
+   for (size_t w = 0; w < nb_vertices; w++)
+   {
+       //elem being d(v, w)
+       int elem = igraph_vector_e(&row_vect, w);
+       lower_bound[w] = std::max(lower_bound[w], std::max(ecc_vect[index] - elem, elem));
+       upper_bound[w] = std::min(upper_bound[w], ecc_vect[index] + elem);
+       if (lower_bound[w] == upper_bound[w])
+       {
+           printf("same bounds!!\n");
+           ecc_vect[w] = lower_bound[w];
+
+       }
+   }
    return ecc_vect;
 
 }
