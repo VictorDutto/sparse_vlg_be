@@ -55,12 +55,12 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
        igraph_matrix_t res;
        igraph_matrix_init(&res, 0, 0);
        //basic shortest_path
-       long int index = cmp_ecc;
+       long int index = starting_ite_point(got_eccentricity);
        igraph_shortest_paths(g_c_component, &res, igraph_vss_1(index), igraph_vss_all(), IGRAPH_ALL);
        //searching for the greatest value in the row_index row
        igraph_vector_t row_vect;
        igraph_vector_init(&row_vect, nb_vertices);
-       igraph_matrix_get_col(&res, &row_vect, index);
+       igraph_matrix_get_row(&res, &row_vect, 0);
        ecc_vect[index] =  igraph_vector_max(&row_vect);
        for (size_t w = 0; w < nb_vertices; w++)
        {
@@ -68,13 +68,12 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
            int elem = igraph_vector_e(&row_vect, w);
            lower_bound[w] = std::max(lower_bound[w], std::max(ecc_vect[index] - elem, elem));
            upper_bound[w] = std::min(upper_bound[w], ecc_vect[index] + elem);
-           if (lower_bound[w] == upper_bound[w])
+           if (lower_bound[w] == upper_bound[w] && got_eccentricity[w] == 0)
            {
                ecc_vect[w] = lower_bound[w];
                got_eccentricity[w] = 1;
                cmp_ecc += 1;
            }
-
        }
     }
     return ecc_vect;
