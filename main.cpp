@@ -3,7 +3,6 @@
 #include <string>
 #include <cstdio>
 #include <cstdlib>
-#include <vector>
 
 
 
@@ -32,9 +31,10 @@ int main()
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
-   calculate_eccentricity(gcc);
+   auto ecc_vect = calculate_eccentricity(gcc);
+   size_t lgt = ecc_vect.size();
+   for (size_t i = 0; i < lgt; i = 1 + i + 0.1 * lgt)
+      printf("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
    std::fclose(f);
-
-
-      return 0;
+   return 0;
 }
