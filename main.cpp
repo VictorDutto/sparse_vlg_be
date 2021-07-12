@@ -1,18 +1,22 @@
 #include "utils.hh"
 
-
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
-#include <numeric>
-#include <limits>
 
 
 
 int main()
 {
    igraph_real_t diameter;
-   FILE* f = std::fopen("../amazon0302.txt", "r");
+   //graph format must be separated with whitespaces
+   //this project is not meant to be a wrapper around igraph_read_graph_edgelist
+   std::string graph_name("p2p-Gnutella04.txt");
+   std::string arg("../graph/");
+   arg = arg  + graph_name;
+   printf("%s\n", arg.c_str());
+   FILE* f = std::fopen(arg.c_str(), "r");
    if (!f)
    {
       std::perror("Open failed\n");

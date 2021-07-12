@@ -43,12 +43,17 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
 
    //launch eccentricity computation routine
 
-   igraph_vector_t uninit_vect;
    igraph_matrix_t res;
    igraph_matrix_init(&res, 0, 0);
    //basic shortest_path
-   igraph_shortest_paths(g_c_component, &res, igraph_vss_1(5), igraph_vss_1(5), IGRAPH_ALL);
-
+   size_t index = 0;
+   igraph_shortest_paths(g_c_component, &res, igraph_vss_1(index), igraph_vss_all(), IGRAPH_ALL);
+   //searching for the greatest value in the row_index row
+   igraph_vector_t row_vect;
+   igraph_vector_init(&row_vect, nb_vertices);
+   igraph_matrix_get_row(&res, &row_vect, index);
+   ecc_vect[index] =  igraph_vector_max(&row_vect);
+   printf("%u\n", ecc_vect[index]);
    // select vertice
    // compute eccentricity
    //propagate information
