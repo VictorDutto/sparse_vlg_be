@@ -1,11 +1,12 @@
-#include <igraph.h>
+#include "utils.hh"
+
+
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
 #include <numeric>
 #include <limits>
 
-#include "utils.hh"
 
 
 int main()
@@ -27,18 +28,7 @@ int main()
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
-   size_t nb_vertices = igraph_vcount(&graph);
-   
-   // Generates the vector of graph indexes
-   // then fill it
-   std::vector<unsigned int> index_vect(nb_vertices);
-   std::iota(index_vect.begin(), index_vect.end(), 0);
-   //filled index referes to the vertice
-   std::vector<int> ecc_vect(nb_vertices, 0);
-   std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
-   std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
-
-   //launch eccentricity computation routine
+   calculate_eccentricity(gcc);
    std::fclose(f);
 
 
