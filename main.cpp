@@ -14,7 +14,7 @@ int main()
    std::string graph_name("p2p-Gnutella04.txt");
    std::string arg("../graph/");
    arg = arg  + graph_name;
-   printf("%s\n", arg.c_str());
+   printf_wrapper("%s\n", arg.c_str());
    FILE* f = std::fopen(arg.c_str(), "r");
    if (!f)
    {
@@ -27,14 +27,14 @@ int main()
 
    // Get graph from file
    int error = igraph_read_graph_edgelist(&graph, f, 0, b);
-   printf("There are %d edges in the graph\n", igraph_ecount(&graph));
+   printf_wrapper("There are %d edges in the graph\n", igraph_ecount(&graph));
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
    auto ecc_vect = calculate_eccentricity(gcc);
    size_t lgt = ecc_vect.size();
    for (size_t i = 0; i < lgt; i = 1 + i + 0.1 * lgt)
-      printf("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
+      printf_wrapper("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
    std::fclose(f);
    return 0;
 }
