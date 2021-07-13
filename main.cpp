@@ -27,7 +27,7 @@ int main()
 
    // Get graph from file
    int error = igraph_read_graph_edgelist(&graph, f, 0, b);
-   printf("There is %d edges in the graph\n", igraph_ecount(&graph));
+   printf("There are %d edges in the graph\n", igraph_ecount(&graph));
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);

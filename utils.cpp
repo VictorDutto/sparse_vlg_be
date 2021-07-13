@@ -27,33 +27,43 @@ igraph_t *init_gcc(igraph_t *graph)
     return lcc_graph;
 }
 
+
+//Aux function, called in starting_ite_point
+//check next chunk
+long int starting_ite_point_aux(std::vector<int> got_ecc, size_t avg_pos)
+{
+    long int res = 0;
+    while (got_ecc[res] == 1)
+        res++;
+    return res;
+}
+
 //Defines strategy
 //density strategy
 //in cases where vertices are linked according to index
 //we choose a starting point according to the average position observed
 //until call with opt to avoid less relevant cases
-long int starting_ite_point(std::vector<int> got_ecc, size_t avg_pos,
-    int revertable = 1)
+long int starting_ite_point(std::vector<int> got_ecc, size_t avg_pos)
 {
-    printf("calling starting ite point with %ld, %i\n", avg_pos, revertable);
     long int res = 0;
-    if (avg_pos == 0)
-    {
-        return 0;
-    }
     size_t n = got_ecc.size();
-    if (avg_pos * 4 < n || n - avg_pos < n / 4 || revertable)
+    if (avg_pos * 4 > n && n - avg_pos > n / 4)
     {
         res = n - avg_pos;
     }
     while (got_ecc[res] == 1)
+    {
         res++;
+    }
     if (res == n)
     {
-        starting_ite_point(got_ecc, avg_pos, 0);
+        starting_ite_point_aux(got_ecc, avg_pos);
     }
     return res;
 }
+
+
+
 
 std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
 {
