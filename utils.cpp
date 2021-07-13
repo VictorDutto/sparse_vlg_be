@@ -65,8 +65,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
        igraph_matrix_t res;
        igraph_matrix_init(&res, 0, 0);
        //new starting point, depends on strategy
-       size_t avg_pos = cmp_ecc == 0 ? 0 : pos_sum / cmp_ecc;
-       long int index = starting_ite_point(got_eccentricity, avg_pos);
+       long int index = starting_ite_point(got_eccentricity);
        //searching for the greatest value in the row_index row
        igraph_vector_t row_vect;
        igraph_shortest_paths(g_c_component, &res, igraph_vss_1(index), igraph_vss_all(), IGRAPH_ALL);
