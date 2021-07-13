@@ -9,6 +9,6 @@
 long int starting_ite_point(std::vector<int> got_ecc, std::optional<size_t> avg_pos = std::nullopt);
 
 long int starting_ite_point_degree(std::vector<int> got_ecc,
-				   igraph_t *g_c_component);
+				   igraph_vector_t prio_vect);
 
 #endif

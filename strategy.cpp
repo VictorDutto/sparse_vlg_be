@@ -59,13 +59,10 @@ long int starting_ite_point(std::vector<int> got_ecc, std::optional<size_t> avg_
 
 
 long int starting_ite_point_degree(std::vector<int> got_ecc,
-				   igraph_t *g_c_component)
+				   igraph_vector_t prio_vect)
 {
-    long int index;
-    igraph_vector_t vect;
-    igraph_vector_init(&vect, 0);
-    igraph_degree(g_c_component, &vect, igraph_vss_1(0), IGRAPH_ALL, false);
-    index =  igraph_vector_max(&vect);
-    printf_wrapper("computed index: %lu\n", index);
-    return index;
+    long int res = 0;
+    while (got_ecc[igraph_vector_e(&prio_vect, res)] == 1)
+        res++;
+    return res;
 }
