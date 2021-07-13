@@ -1,4 +1,5 @@
 import subprocess as sp
+import time
 import os
 
 # Strategies
@@ -9,21 +10,20 @@ strategies = [
     "degree"
 ]
 
-# Functions
-def run_shell_file(arg, t):
-    '''Run file as bash posix'''
-    args = ["build/sparse_vlg", "--" + arg]
+# Function
+def csv_bench(times):
+    csv = ""
+    for strat in strategies:
+        if len(times) != len(strategies):
+            times.append(0)
+        csv += strat + ";"
+    csv += "\n"
 
-    print(args)
-    if t != 0:
-        try:
-            ret = sp.run(args, capture_output=True, text=True, timeout = t)
-        except sp.TimeoutExpired:
-            raise RuntimeError
-    else:
-        ret = sp.run(args, capture_output=True, text=True)
+    for t in times:
+        csv += str(round(t,2)) + ";"
+    csv += "\n"
 
-    return ret
+    return csv
 
 # Main
 if __name__ == "__main__":
@@ -31,13 +31,19 @@ if __name__ == "__main__":
     print("VLG Testsuite")
 
     outputs = []
+    times = []
 
     for strat in strategies:
-        #print(run_shell_file(strat, 0))
-        output.append(os.popen("./sparse_vlg --" + strat).read())
+        t0 = time.time()
+        outputs.append(os.popen("./sparse_vlg --" + strat).read())
+        t1 = time.time()
+
         print("Execution of " + strat + " done\n")
-        print()
+        times.append(t1-t0)
+        print("Calculated exec time " + str(t1-t0))
 
     print("That's all, folks !")
+    print()
+    print(csv_bench(times))
 
 
