@@ -6,7 +6,7 @@
 
 igraph_t *init_gcc(igraph_t *graph);
 
-std::vector<int> calculate_eccentricity(igraph_t *g_c_component);
+std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index);
 
 void printf_wrapper(const char *format, ...);
 

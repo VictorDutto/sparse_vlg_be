@@ -45,27 +45,43 @@ igraph_t *init_gcc(igraph_t *graph)
     return lcc_graph;
 }
 
-
-
-std::vector<int> calculate_eccentricity(igraph_t *g_c_component)
+std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
 {
-   size_t nb_vertices = igraph_vcount(g_c_component);
-   // Generates the vector of graph indexes
-   // then fill it
-   std::vector<int> got_eccentricity(nb_vertices, 0);
-   //filled index referes to the vertice
-   std::vector<int> ecc_vect(nb_vertices, 0);
-   std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
-   std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
+    opt_index = opt_index;
+    size_t nb_vertices = igraph_vcount(g_c_component);
+    // Generates the vector of graph indexes
+    // then fill it
+    std::vector<int> got_eccentricity(nb_vertices, 0);
+    //filled index referes to the vertice
+    std::vector<int> ecc_vect(nb_vertices, 0);
+    std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
+    std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
 
-   size_t pos_sum = 0;
-   for (size_t cmp_ecc = 0; cmp_ecc < nb_vertices;)
-   {
+    size_t pos_sum = 0;
+    for (size_t cmp_ecc = 0; cmp_ecc < nb_vertices;)
+    {
        //launch eccentricity computation routine
        igraph_matrix_t res;
        igraph_matrix_init(&res, 0, 0);
+       
        //new starting point, depends on strategy
-       long int index = starting_ite_point(got_eccentricity);
+       long int index;
+       size_t avg_pos =  cmp_ecc == 0 ? 0 : pos_sum / cmp_ecc;
+
+       switch (opt_index){
+        case 0:
+            index = starting_ite_point(got_eccentricity);
+            break;
+        case 1:
+            index = starting_ite_point(got_eccentricity, avg_pos);
+            break;
+        case 2:
+            index = starting_ite_point(got_eccentricity); //TODO
+            break;
+        default:
+            fprintf(stderr, "No strategy with this index\n");
+       }
+       
        //searching for the greatest value in the row_index row
        igraph_vector_t row_vect;
        igraph_shortest_paths(g_c_component, &res, igraph_vss_1(index), igraph_vss_all(), IGRAPH_ALL);

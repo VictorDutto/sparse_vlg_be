@@ -1,13 +1,30 @@
 #include "utils.hh"
 
+#include <getopt.h>
+#include <unistd.h>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
 
-
-
-int main()
+int main(int argc, char *const argv[])
 {
+
+   int option_index = 0;
+   static struct option long_options[] = {
+      {"basic",    0, NULL,  0 },
+      {"density",  0, NULL,  1 },
+      {"degree",   0, NULL,  2 }
+   };
+
+   // Get parameter for strategies
+   int opt = getopt_long(argc, argv, "", long_options, &option_index);
+   
+   if (opt == -1)
+   {
+      fprintf(stderr, "Usage: %s [-t nsecs] [-n] name\n", argv[0]);
+      exit(EXIT_FAILURE);
+   }
+
    igraph_real_t diameter;
    //graph format must be separated with whitespaces
    //this project is not meant to be a wrapper around igraph_read_graph_edgelist
@@ -31,7 +48,7 @@ int main()
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
-   auto ecc_vect = calculate_eccentricity(gcc);
+   auto ecc_vect = calculate_eccentricity(gcc, option_index);
    size_t lgt = ecc_vect.size();
    for (size_t i = 0; i < lgt; i = 1 + i + 0.1 * lgt)
       printf_wrapper("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
