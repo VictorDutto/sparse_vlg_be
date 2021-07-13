@@ -10,7 +10,8 @@ int main(int argc, char *const argv[])
 {
 
    int option_index = 0;
-   static struct option long_options[] = {
+   static struct option long_options[] = 
+   {
       {"basic",    0, NULL,  0 },
       {"density",  0, NULL,  1 },
       {"degree",   0, NULL,  2 }

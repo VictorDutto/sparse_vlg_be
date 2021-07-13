@@ -1,4 +1,5 @@
 #include "strategy.hh"
+#include "utils.hh"
 
 
 //Defines strategy
@@ -27,9 +28,6 @@ long int starting_ite_point_aux(std::vector<int> got_ecc, std::optional<size_t> 
     return res;
 }
 
-
-
-
 //Defines strategy
 //density strategy
 //in cases where vertices are linked according to index
@@ -56,4 +54,18 @@ long int starting_ite_point(std::vector<int> got_ecc, std::optional<size_t> avg_
         return starting_ite_point_aux(got_ecc, avg_pos.value());
     }
     return res;
+}
+
+
+
+long int starting_ite_point_degree(std::vector<int> got_ecc,
+				   igraph_t *g_c_component)
+{
+    long int index;
+    igraph_vector_t vect;
+    igraph_vector_init(&vect, 0);
+    igraph_degree(g_c_component, &vect, igraph_vss_1(0), IGRAPH_ALL, false);
+    index =  igraph_vector_max(&vect);
+    printf_wrapper("computed index: %lu\n", index);
+    return index;
 }

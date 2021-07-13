@@ -45,6 +45,57 @@ igraph_t *init_gcc(igraph_t *graph)
     return lcc_graph;
 }
 
+
+//sort the index according to the degrees
+void custom_qs(igraph_vector_t *degree_map, std::vector<igraph_real_t> index_vect, size_t low, size_t high)
+{
+    if (low < high)
+    {
+        auto pi = low;
+        auto i = low;
+        auto j = high;
+        while (i < j)
+        {
+            while (igraph_vector_e(degree_map, i) <= igraph_vector_e(degree_map, pi) && i < high)
+                i++;
+            while (igraph_vector_e(degree_map, j) > igraph_vector_e(degree_map, pi))
+                j--;
+            if (i < j)
+            {
+                igraph_vector_swap_elements(degree_map, i, j);
+                auto tmp2 = index_vect[i];
+                index_vect[i] = index_vect[j];
+                index_vect[j] = tmp2;
+            }
+        }
+
+        igraph_vector_swap_elements(degree_map, pi, j);
+        auto tmp2 = index_vect[pi];
+        index_vect[pi] = index_vect[j];
+        index_vect[j] = tmp2;
+        custom_qs(degree_map, index_vect, low, j - 1);
+        custom_qs(degree_map, index_vect, j + 1, high);
+    }
+}
+
+igraph_vector_t get_highest_degree(igraph_t *g_c_component, size_t nb_vertices)
+{
+    igraph_vector_t degree_map;
+    igraph_vector_init(&degree_map, nb_vertices);
+    //compute the degree for each vertex
+    igraph_degree(g_c_component, &degree_map, igraph_vss_all(), IGRAPH_ALL, false);
+    //match index to degrees
+    std::vector<igraph_real_t> index_vect(nb_vertices, 0);
+    std::iota(index_vect.begin(), index_vect.end(), 0);
+    //quicksort index_vect using degree_map values
+    custom_qs(&degree_map, index_vect, 0, nb_vertices - 1);
+    const igraph_real_t *c_arr = &index_vect[0];
+    igraph_vector_t sorted_by_degree;
+    igraph_vector_init_copy(&sorted_by_degree, c_arr, nb_vertices);
+    return sorted_by_degree;
+
+}
+
 std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
 {
     opt_index = opt_index;
@@ -57,6 +108,8 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
     std::vector<int> upper_bound(nb_vertices, std::numeric_limits<int>::max());
     std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
 
+    if (opt_index == 2)
+        igraph_vector_t prio_vect = get_highest_degree(g_c_component, nb_vertices);
     size_t pos_sum = 0;
     for (size_t cmp_ecc = 0; cmp_ecc < nb_vertices;)
     {
@@ -76,7 +129,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
             index = starting_ite_point(got_eccentricity, avg_pos);
             break;
         case 2:
-            index = starting_ite_point(got_eccentricity); //TODO
+            index = starting_ite_point(got_eccentricity);
             break;
         default:
             fprintf(stderr, "No strategy with this index\n");
@@ -102,6 +155,8 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
                pos_sum += w; 
            }
        }
+       igraph_vector_destroy(&row_vect);
+       igraph_matrix_destroy(&res);
     }
     return ecc_vect;
 
