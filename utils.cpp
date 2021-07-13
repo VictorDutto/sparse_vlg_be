@@ -1,5 +1,6 @@
 //c static lib
 #include "utils.hh"
+#include "strategy.hh"
 
 //c dyn lib
 #include <unistd.h>
@@ -43,24 +44,6 @@ igraph_t *init_gcc(igraph_t *graph)
 
     return lcc_graph;
 }
-
-
-//Defines strategy
-//density strategy
-//in cases where vertices are linked according to index
-//we choose a starting point according to the average position observed
-//until call with opt to avoid less relevant cases
-long int starting_ite_point(std::vector<int> got_ecc, size_t avg_pos)
-{
-    long int res = 0;
-    size_t n = got_ecc.size();
-    while (res < n && got_ecc[res] == 1)
-    {
-        res++;
-    }
-    return res;
-}
-
 
 
 
