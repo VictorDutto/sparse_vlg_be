@@ -10,18 +10,23 @@ strategies = [
     "degree"
 ]
 
+files = ["p2p-Gnutella04.txt"]
+
 # Function
 def csv_bench(times):
-    csv = ""
+    csv = "files;"
     for strat in strategies:
         if len(times) != len(strategies):
             times.append(0)
         csv += strat + ";"
     csv += "\n"
 
-    for t in times:
-        csv += str(round(t,2)) + ";"
-    csv += "\n"
+    for ii, f in enumerate(files):
+        t = times[ii]
+        csv += f + ";"
+        for t_ in t:
+            csv += str(round(t_,2)) + ";"
+        csv += "\n"
 
     return csv
 
@@ -33,14 +38,17 @@ if __name__ == "__main__":
     outputs = []
     times = []
 
-    for strat in strategies:
-        t0 = time.time()
-        outputs.append(os.popen("./sparse_vlg --" + strat).read())
-        t1 = time.time()
+    for f in files:
+        file_times = []
+        for strat in strategies:
+            t0 = time.time()
+            outputs.append(os.popen("./sparse_vlg --" + strat + " --file " + f).read())
+            t1 = time.time()
 
-        print("Execution of " + strat + " done\n")
-        times.append(t1-t0)
-        print("Calculated exec time " + str(t1-t0))
+            print("Execution of " + strat + " with file " + f + " done\n")
+            file_times.append(t1-t0)
+            print("Calculated exec time " + str(t1-t0))
+        times.append(file_times)
 
     print("That's all, folks !")
     print()
