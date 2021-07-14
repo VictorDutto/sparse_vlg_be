@@ -14,6 +14,7 @@ files = ["p2p-Gnutella04.txt"]
 
 # Function
 def csv_bench(times):
+    '''Create csv from times execution list'''
     csv = "files;"
     for strat in strategies:
         if len(times) != len(strategies):
@@ -53,5 +54,8 @@ if __name__ == "__main__":
     print("That's all, folks !")
     print()
     print(csv_bench(times))
-
-
+    
+    # Write output as csv
+    f = open("test.csv", "a")
+    f.write(csv_bench(times))
+    f.close()
