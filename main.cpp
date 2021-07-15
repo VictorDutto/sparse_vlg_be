@@ -15,8 +15,8 @@ int main(int argc, char *const argv[])
       {"basic",    0, NULL,  0 },
       {"density",  0, NULL,  1 },
       {"degree",   0, NULL,  2 },
-      {"degreemax", 0, NULL, 3},
-      {"degreemin", 0, NULL, 4}
+      {"degreemin", 0, NULL, 3},
+      {"degreemax", 0, NULL, 4}
    };
 
    // Get parameter for strategies
