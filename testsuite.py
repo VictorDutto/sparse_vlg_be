@@ -4,14 +4,16 @@ import os
 
 # Strategies
 
+# Add or remove strategies to try here
 strategies = [
     "basic",
     "density",
-    "degree",
     "degreemin",
-    "degreemax"
+    "degreemax",
+    "delta"
 ]
 
+# Add graph files to test here
 files = ["p2p-Gnutella04.txt"]
 
 # Function

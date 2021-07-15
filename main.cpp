@@ -15,17 +15,17 @@ int main(int argc, char *const argv[])
 {
    printf_wrapper("Bounding Eccentricities algorithm\n");
    int opt, option_index;
-   int strategy = 0;
+   int strategy = -1;
    std::string graph_name = "p2p-Gnutella04.txt";
 
    static struct option long_options[] = 
    {
-      {"basic",    0, NULL,  0 },
-      {"density",  0, NULL,  1 },
-      {"degree",   0, NULL,  2 },
-      {"degreemin", 0, NULL, 3},
-      {"degreemax", 0, NULL, 4},
-      {"file",      1, NULL, 5}
+      {"basic",    0, NULL,  0},
+      {"density",  0, NULL,  1},
+      {"degreemin", 0, NULL, 2},
+      {"degreemax", 0, NULL, 3},
+      {"delta",     0, NULL, 4},
+      {"file",      0, NULL, 5}
    };
 
    // Get parameter for strategies and assign file

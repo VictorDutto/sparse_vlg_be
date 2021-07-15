@@ -115,7 +115,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
     std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
 
     igraph_vector_t prio_vect;
-    if (opt_index != 0 && opt_index != 1)
+    if (opt_index == -1 || opt_index == 2 || opt_index == 3)
         prio_vect = get_highest_degree(g_c_component, nb_vertices, opt_index);
     size_t pos_sum = 0;
     int cnt = 0;
@@ -127,6 +127,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
        
        //new starting point, depends on strategy
        long int index;
+       int max_;
        size_t avg_pos =  cmp_ecc == 0 ? 0 : pos_sum / cmp_ecc;
        switch (opt_index){
         case -1:
@@ -139,8 +140,16 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
             break;
         case 2:
         case 3:
-        case 4:
             index = starting_ite_point_degree(got_eccentricity, prio_vect);
+            break;
+        case 4:
+            max_ = 0;
+            for (size_t ii = 0; ii < nb_vertices;)
+            {
+                if (upper_bound[ii] - lower_bound[ii] > upper_bound[max_] - lower_bound[max_])
+                    max_ = ii;
+                index = max_;
+            }
             break;
         default:
             fprintf(stderr, "No strategy with this index\n");
