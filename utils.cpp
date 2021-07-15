@@ -92,7 +92,7 @@ igraph_vector_t get_highest_degree(igraph_t *g_c_component, size_t nb_vertices, 
     custom_qs(&degree_map, index_vect, 0, nb_vertices - 1);
     //if its degree min or default, put it in ascending order
     // if its left to interpretation, if condition is true, put it in ascending
-    if (opt_index == 2 || opt_index == 3 || (opt_index == -1 && 
+    if (opt_index == 2 || (opt_index == -1 && 
         index_vect[0] - index_vect[1] < index_vect[nb_vertices - 2] - index_vect[nb_vertices - 1]))
         std::reverse(index_vect.begin(), index_vect.end());
     const igraph_real_t *c_arr = &index_vect[0];

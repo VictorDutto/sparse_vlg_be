@@ -66,7 +66,7 @@ long int starting_ite_point_degree(std::vector<int> got_ecc,
     long int res = 0;
     while (got_ecc[igraph_vector_e(&prio_vect, res)] == 1)
         res++;
-    return res;
+    return igraph_vector_e(&prio_vect, res);
 }
 
 
