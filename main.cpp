@@ -26,7 +26,7 @@ int main(int argc, char *const argv[])
       {"degreemin", 0, NULL, 2},
       {"degreemax", 0, NULL, 3},
       {"delta",     0, NULL, 4},
-      {"file",      0, NULL, 5}
+      {"file",      1, NULL, 5}
    };
 
    // Get parameter for strategies and assign file
