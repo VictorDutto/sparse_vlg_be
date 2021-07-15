@@ -28,7 +28,6 @@ igraph_t *init_gcc(igraph_t *graph)
 
     // Decompose in connexe subgraph
     igraph_decompose(graph, &graph_list, IGRAPH_STRONG, -1, 2);
-    printf_wrapper("There are %ld graph in list\n", igraph_vector_ptr_size(&graph_list));
 
     // Sort connexes subgraphs (ascending order ?)
     igraph_vector_ptr_sort(&graph_list, igraph_vector_colex_cmp);
@@ -91,7 +90,10 @@ igraph_vector_t get_highest_degree(igraph_t *g_c_component, size_t nb_vertices, 
     std::iota(std::begin(index_vect), std::end(index_vect), 0);
     //quicksort index_vect using degree_map values
     custom_qs(&degree_map, index_vect, 0, nb_vertices - 1);
-    if (opt_index == 2 || opt_index == 3)
+    //if its degree min or default, put it in ascending order
+    // if its left to interpretation, if condition is true, put it in ascending
+    if (opt_index == 2 || opt_index == 3 || (opt_index == -1 && 
+        index_vect[0] - index_vect[1] < index_vect[nb_vertices - 2] - index_vect[nb_vertices - 1]))
         std::reverse(index_vect.begin(), index_vect.end());
     const igraph_real_t *c_arr = &index_vect[0];
     igraph_vector_t sorted_by_degree;
@@ -113,7 +115,7 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
     std::vector<int> lower_bound(nb_vertices, std::numeric_limits<int>::min());
 
     igraph_vector_t prio_vect;
-    if (opt_index >= 2)
+    if (opt_index != 0 && opt_index != 1)
         prio_vect = get_highest_degree(g_c_component, nb_vertices, opt_index);
     size_t pos_sum = 0;
     int cnt = 0;
@@ -126,8 +128,9 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
        //new starting point, depends on strategy
        long int index;
        size_t avg_pos =  cmp_ecc == 0 ? 0 : pos_sum / cmp_ecc;
-
        switch (opt_index){
+        case -1:
+            index = starting_ite_point_all(got_eccentricity, avg_pos, prio_vect);
         case 0:
             index = starting_ite_point(got_eccentricity);
             break;

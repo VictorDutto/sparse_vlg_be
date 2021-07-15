@@ -24,8 +24,8 @@ int main(int argc, char *const argv[])
    
    if (opt == -1)
    {
-      fprintf(stderr, "Usage: %s [-t nsecs] [-n] name\n", argv[0]);
-      exit(EXIT_FAILURE);
+      printf_wrapper("No argument given, will proceed to a multi approach resolution\n");
+      printf_wrapper("Can call a specific method with: %s [-t nsecs] [-n] name\n", argv[0]);
    }
 
    igraph_real_t diameter;
@@ -34,7 +34,6 @@ int main(int argc, char *const argv[])
    std::string graph_name("p2p-Gnutella04.txt");
    std::string arg("../graph/");
    arg = arg  + graph_name;
-   printf_wrapper("%s\n", arg.c_str());
    FILE* f = std::fopen(arg.c_str(), "r");
    if (!f)
    {
@@ -47,7 +46,6 @@ int main(int argc, char *const argv[])
 
    // Get graph from file
    int error = igraph_read_graph_edgelist(&graph, f, 0, b);
-   printf_wrapper("There are %d edges in the graph\n", igraph_ecount(&graph));
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);

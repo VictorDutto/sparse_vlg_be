@@ -1,6 +1,8 @@
 #include "strategy.hh"
 #include "utils.hh"
 
+#include <cstdlib>
+
 
 //Defines strategy
 //basic strategy: take the first valid vertex
@@ -63,6 +65,26 @@ long int starting_ite_point_degree(std::vector<int> got_ecc,
 {
     long int res = 0;
     while (got_ecc[igraph_vector_e(&prio_vect, res)] == 1)
+        res++;
+    return res;
+}
+
+
+
+long int starting_ite_point_all(std::vector<int> got_ecc, size_t avg_pos, igraph_vector_t prio_vect)
+{
+    long int res = 0;
+    size_t n = got_ecc.size();
+    while (got_ecc[igraph_vector_e(&prio_vect, res)] == 1)
+        res++;
+    // vector<int>, can call std::abs
+    if ((res == 0) || std::abs(igraph_vector_e(&prio_vect, res)
+                    - igraph_vector_e(&prio_vect, res - 1)) > 0)
+        return res;
+    if (avg_pos * 4 > n && n - avg_pos > n / 4)
+        return starting_ite_point(got_ecc, avg_pos);
+    res = 0;
+    while (got_ecc[res] == 1)
         res++;
     return res;
 }
