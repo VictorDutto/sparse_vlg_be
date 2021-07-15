@@ -1,10 +1,15 @@
+//static libs
 #include "utils.hh"
 
+//c dyn libs
 #include <getopt.h>
 #include <unistd.h>
+
+//c++ dyn libs
 #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 
 int main(int argc, char *const argv[])
 {
@@ -40,7 +45,6 @@ int main(int argc, char *const argv[])
       std::perror("Open failed\n");
       return EXIT_FAILURE;
    }
-   int size = 1024;
    igraph_t graph;
    igraph_bool_t b = false;
 
@@ -51,5 +55,18 @@ int main(int argc, char *const argv[])
    auto gcc = init_gcc(&graph);
    auto ecc_vect = calculate_eccentricity(gcc, option_index);
    std::fclose(f);
+   f = std::fopen("ecc_vect.data", "w");
+   if (!f)
+   {
+      std::perror("Cannot write eccentricity vector in a file\n");
+      return EXIT_FAILURE;
+   }
+   std::fwrite(ecc_vect.data(), sizeof ecc_vect[0], ecc_vect.size(), f);
+   std::fclose(f);
+   std::ofstream file;
+   file.open("ecc_vect.txt");
+   for (size_t i = 0; i < ecc_vect.size(); i++)
+       file << ecc_vect[i] << std::endl;
+   file.close();
    return 0;
 }
