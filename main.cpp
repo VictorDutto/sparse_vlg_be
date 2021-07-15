@@ -1,10 +1,15 @@
+//static libs
 #include "utils.hh"
 
+//c dyn libs
 #include <getopt.h>
 #include <unistd.h>
+
+//c++ dyn libs
 #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 
 int main(int argc, char *const argv[])
 {
@@ -13,11 +18,14 @@ int main(int argc, char *const argv[])
    int strategy = 0;
    std::string graph_name = "p2p-Gnutella04.txt";
 
-   static struct option long_options[] = {
+   static struct option long_options[] = 
+   {
       {"basic",    0, NULL,  0 },
       {"density",  0, NULL,  1 },
       {"degree",   0, NULL,  2 },
-      {"file",     1, NULL,  3 }
+      {"degreemin", 0, NULL, 3},
+      {"degreemax", 0, NULL, 4},
+      {"file",      1, NULL, 5}
    };
 
    // Get parameter for strategies and assign file
@@ -27,8 +35,9 @@ int main(int argc, char *const argv[])
          graph_name.assign(optarg);
       else
          strategy = option_index;
+      //printf_wrapper("No argument given, will proceed to a multi approach resolution\n");
+      //printf_wrapper("Can call a specific method with: %s [-t nsecs] [-n] name\n", argv[0]);
    }
-   printf_wrapper("%d\n", strategy);
 
    igraph_real_t diameter;
    //graph format must be separated with whitespaces
@@ -37,25 +46,35 @@ int main(int argc, char *const argv[])
    arg = arg  + graph_name;
    printf_wrapper("Using file: %s\n\n", arg.c_str());
    FILE* f = std::fopen(arg.c_str(), "r");
+  
    if (!f)
    {
       std::perror("Open failed\n");
       return EXIT_FAILURE;
    }
-   int size = 1024;
    igraph_t graph;
    igraph_bool_t b = false;
 
    // Get graph from file
    int error = igraph_read_graph_edgelist(&graph, f, 0, b);
-   printf_wrapper("There are %d edges in the graph\n", igraph_ecount(&graph));
 
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
    auto ecc_vect = calculate_eccentricity(gcc, strategy);
-   size_t lgt = ecc_vect.size();
-   for (size_t i = 0; i < lgt; i = 1 + i + 0.1 * lgt)
-      printf_wrapper("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
+  
    std::fclose(f);
+   f = std::fopen("ecc_vect.data", "w");
+   if (!f)
+   {
+      std::perror("Cannot write eccentricity vector in a file\n");
+      return EXIT_FAILURE;
+   }
+   std::fwrite(ecc_vect.data(), sizeof ecc_vect[0], ecc_vect.size(), f);
+   std::fclose(f);
+   std::ofstream file;
+   file.open("ecc_vect.txt");
+   for (size_t i = 0; i < ecc_vect.size(); i++)
+       file << ecc_vect[i] << std::endl;
+   file.close();
    return 0;
 }
