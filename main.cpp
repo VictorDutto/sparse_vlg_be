@@ -14,7 +14,9 @@ int main(int argc, char *const argv[])
    {
       {"basic",    0, NULL,  0 },
       {"density",  0, NULL,  1 },
-      {"degree",   0, NULL,  2 }
+      {"degree",   0, NULL,  2 },
+      {"degreemax", 0, NULL, 3},
+      {"degreemin", 0, NULL, 4}
    };
 
    // Get parameter for strategies
@@ -50,9 +52,6 @@ int main(int argc, char *const argv[])
    // Get greatest connected components.
    auto gcc = init_gcc(&graph);
    auto ecc_vect = calculate_eccentricity(gcc, option_index);
-   size_t lgt = ecc_vect.size();
-   for (size_t i = 0; i < lgt; i = 1 + i + 0.1 * lgt)
-      printf_wrapper("This vector contains an eccentricity of value: %i\n", ecc_vect[i]);
    std::fclose(f);
    return 0;
 }
