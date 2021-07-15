@@ -7,7 +7,9 @@ import os
 strategies = [
     "basic",
     "density",
-    "degree"
+    "degree",
+    "degreemin",
+    "degreemax"
 ]
 
 files = ["p2p-Gnutella04.txt"]
@@ -46,9 +48,9 @@ if __name__ == "__main__":
             outputs.append(os.popen("./sparse_vlg --" + strat + " --file " + f).read())
             t1 = time.time()
 
-            print("Execution of " + strat + " with file " + f + " done\n")
+            print("Execution of " + strat + " with file " + f + " done")
             file_times.append(t1-t0)
-            print("Calculated exec time " + str(t1-t0))
+            print("Calculated exec time " + str(t1-t0) + "\n")
         times.append(file_times)
 
     print("That's all, folks !")

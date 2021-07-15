@@ -31,7 +31,7 @@ int main(int argc, char *const argv[])
    // Get parameter for strategies and assign file
    while ((opt = getopt_long(argc, argv, "", long_options, &option_index)) != -1)
    {
-      if (option_index == 3)
+      if (option_index == 5)
          graph_name.assign(optarg);
       else
          strategy = option_index;
