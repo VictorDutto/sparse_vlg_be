@@ -10,8 +10,7 @@ strategies = [
     "--basic",
     "--density",
     "--degreemin",
-    "--degreemax",
-    "--delta"
+    "--degreemax"
 ]
 
 # Add graph files to test here

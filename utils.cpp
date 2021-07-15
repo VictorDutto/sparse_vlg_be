@@ -146,7 +146,8 @@ std::vector<int> calculate_eccentricity(igraph_t *g_c_component, int opt_index)
             max_ = 0;
             for (size_t ii = 0; ii < nb_vertices;)
             {
-                if (upper_bound[ii] - lower_bound[ii] > upper_bound[max_] - lower_bound[max_])
+                if (upper_bound[ii] - lower_bound[ii] >= upper_bound[max_] - lower_bound[max_] 
+                   && ecc_vect[ii] == 0)
                     max_ = ii;
                 index = max_;
             }
