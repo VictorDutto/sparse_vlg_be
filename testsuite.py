@@ -47,16 +47,21 @@ if __name__ == "__main__":
     for f in files:
         file_times = []
         for strat in strategies:
+            # Calculate time to compute using specific strategy
             t0 = time.time()
-            outputs.append(os.popen("./sparse_vlg " + strat + " --file " + f).read())
+            outp = os.popen("./sparse_vlg " + strat + " --file " + f).read()
             t1 = time.time()
 
+            # Pretty prind and saving output
+            outputs.append(strat+ ": " + outp)
             print("Execution of " + strat + " with file " + f + " done")
             file_times.append(t1-t0)
             print("Calculated exec time " + str(t1-t0) + "\n")
         times.append(file_times)
 
-    print("That's all, folks !")
+    for o in outputs:
+        print(o, end="")
+
     print()
     print(csv_bench(times))
     
