@@ -14,7 +14,7 @@ strategies = [
 ]
 
 # Add graph files to test here
-files = ["p2p-Gnutella04.txt"]
+files = ["../graph/p2p-Gnutella04.txt"]
 
 # Function
 def csv_bench(times):

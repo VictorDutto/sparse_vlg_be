@@ -17,7 +17,7 @@ int main(int argc, char *const argv[])
    int opt, option_index;
    int strategy = -1;
 
-   std::string graph_name = "p2p-Gnutella30.txt";
+   std::string graph_name = "../graph/p2p-Gnutella04.txt";
 
    static struct option long_options[] = 
    {
@@ -43,10 +43,8 @@ int main(int argc, char *const argv[])
    igraph_real_t diameter;
    //graph format must be separated with whitespaces
    //this project is not meant to be a wrapper around igraph_read_graph_edgelist
-   std::string arg("../graph/");
-   arg = arg  + graph_name;
-   printf_wrapper("Using file: %s\n\n", arg.c_str());
-   FILE* f = std::fopen(arg.c_str(), "r");
+   printf_wrapper("Using file: %s\n\n", graph_name.c_str());
+   FILE* f = std::fopen(graph_name.c_str(), "r");
   
    if (!f)
    {
