@@ -6,11 +6,12 @@ import os
 
 # Add or remove strategies to try here
 strategies = [
-    "basic",
-    "density",
-    "degreemin",
-    "degreemax",
-    "delta"
+    "", #nothing -> trigger multi approche
+    "--basic",
+    "--density",
+    "--degreemin",
+    "--degreemax",
+    "--delta"
 ]
 
 # Add graph files to test here
@@ -47,7 +48,7 @@ if __name__ == "__main__":
         file_times = []
         for strat in strategies:
             t0 = time.time()
-            outputs.append(os.popen("./sparse_vlg --" + strat + " --file " + f).read())
+            outputs.append(os.popen("./sparse_vlg " + strat + " --file " + f).read())
             t1 = time.time()
 
             print("Execution of " + strat + " with file " + f + " done")
